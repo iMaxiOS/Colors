@@ -11,6 +11,7 @@ struct ContentView: View {
     
     @State var show = false
     @State var searchText = ""
+    @State var filtered: [Gradient] = []
     @State var gradients: [Gradient] = []
     @State var columns = Array(repeating: GridItem(.flexible(), spacing: 20), count: 2)
     
@@ -21,10 +22,19 @@ struct ContentView: View {
                     HStack {
                         TextField("Search Color", text: $searchText)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onChange(of: searchText) { value in
+                                if searchText != "" {
+                                    searchColor()
+                                } else {
+                                    searchText = ""
+                                    filtered = gradients
+                                }
+                            }
                         
                         Button(action: {
                             withAnimation(.easeOut) {
                                 searchText = ""
+                                filtered = gradients
                                 show.toggle()
                             }
                         }, label: {
@@ -70,38 +80,47 @@ struct ContentView: View {
             .padding(.horizontal)
             .zIndex(1)
             
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20, content: {
-                    ForEach(gradients, id: \.name) { color in
-                        
-                        VStack {
-                            ZStack {
-                                LinearGradient(gradient: .init(colors: hexToRGB(colors: color.colors)),
-                                               startPoint: .bottom,
-                                               endPoint: .top)
-                                    .frame(height: 180)
-                                    .clipShape(CShape())
-                                    .cornerRadius(10)
-                                
-                                Text(color.name)
-                                    .foregroundColor(.white)
-                            }
+            if gradients.isEmpty {
+                ProgressView()
+                    .padding(.top, 55)
+                
+                Spacer()
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20, content: {
+                        ForEach(filtered, id: \.name) { color in
                             
-                            if columns.count == 1 {
-                                HStack(spacing: 15) {
-                                    ForEach(color.colors, id: \.self) { color in
-                                        Text(color)
-                                            .font(.title3)
-                                            .fontWeight(.bold)
-                                            .foregroundColor(.white)
+                            VStack {
+                                ZStack {
+                                    LinearGradient(gradient: .init(colors: hexToRGB(colors: color.colors)),
+                                                   startPoint: .bottom,
+                                                   endPoint: .top)
+                                        .frame(height: 180)
+                                        .clipShape(CShape())
+                                        .cornerRadius(10)
+                                    
+                                    Text(color.name)
+                                        .foregroundColor(.white)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                }
+                                
+                                if columns.count == 1 {
+                                    HStack(spacing: 15) {
+                                        ForEach(color.colors, id: \.self) { color in
+                                            Text(color)
+                                                .font(.title3)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(.white)
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                })
+                    })
+                }
+                .zIndex(0)
             }
-            .zIndex(0)
         }
         .onAppear(perform: {
             getColors()
@@ -112,13 +131,14 @@ struct ContentView: View {
     func getColors() {
         let url = "https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json"
         let seesion = URLSession(configuration: .default)
+        
         seesion.dataTask(with: URL(string: url)!) { (data, _, _) in
-            
             guard let jsonData = data else { return }
             
             do {
                 let gradients = try JSONDecoder().decode([Gradient].self, from: jsonData)
                 self.gradients = gradients
+                self.filtered = gradients
             } catch {
                 print(error)
             }
@@ -127,24 +147,43 @@ struct ContentView: View {
     }
     
     func hexToRGB(colors: [String]) -> [Color] {
-
         var colors1 : [Color] = []
-
+        
         for color in colors {
             var trimmed = color.trimmingCharacters(in: .whitespaces).uppercased()
             trimmed.remove(at: trimmed.startIndex)
-
+            
             var hexValue : UInt64 = 0
             Scanner(string: trimmed).scanHexInt64(&hexValue)
-
+            
             let r = CGFloat((hexValue & 0x00FF0000) >> 16) / 255
             let g = CGFloat((hexValue & 0x0000FF00) >> 8) / 255
             let b = CGFloat((hexValue & 0x000000FF)) / 255
-
+            
             colors1.append(Color(UIColor(red: r, green: g, blue: b, alpha: 1.0)))
         }
-
+        
         return colors1
+    }
+    
+    func searchColor() {
+        let query = searchText.lowercased()
+        
+        DispatchQueue.global(qos: .background).async {
+            let filter = gradients.filter { (gradient) -> Bool in
+                if gradient.name.lowercased().contains(query) {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            
+            DispatchQueue.main.async {
+                withAnimation(.easeOut) {
+                    self.filtered = filter
+                }
+            }
+        }
     }
 }
 
