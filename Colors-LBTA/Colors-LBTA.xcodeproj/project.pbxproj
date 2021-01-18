@@ -11,6 +11,8 @@
 		AC89A1BD25B5D86C00FE5238 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC89A1BC25B5D86C00FE5238 /* ContentView.swift */; };
 		AC89A1BF25B5D86E00FE5238 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC89A1BE25B5D86D00FE5238 /* Assets.xcassets */; };
 		AC89A1C225B5D86E00FE5238 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC89A1C125B5D86E00FE5238 /* Preview Assets.xcassets */; };
+		AC89A1CB25B5F45200FE5238 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC89A1CA25B5F45200FE5238 /* Model.swift */; };
+		AC89A1CE25B5FDA600FE5238 /* CShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC89A1CD25B5FDA600FE5238 /* CShape.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		AC89A1BE25B5D86D00FE5238 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC89A1C125B5D86E00FE5238 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AC89A1C325B5D86E00FE5238 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC89A1CA25B5F45200FE5238 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		AC89A1CD25B5FDA600FE5238 /* CShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CShape.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 			children = (
 				AC89A1BA25B5D86C00FE5238 /* Colors_LBTAApp.swift */,
 				AC89A1BC25B5D86C00FE5238 /* ContentView.swift */,
+				AC89A1CD25B5FDA600FE5238 /* CShape.swift */,
+				AC89A1CA25B5F45200FE5238 /* Model.swift */,
 				AC89A1BE25B5D86D00FE5238 /* Assets.xcassets */,
 				AC89A1C325B5D86E00FE5238 /* Info.plist */,
 				AC89A1C025B5D86E00FE5238 /* Preview Content */,
@@ -138,8 +144,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC89A1CB25B5F45200FE5238 /* Model.swift in Sources */,
 				AC89A1BD25B5D86C00FE5238 /* ContentView.swift in Sources */,
 				AC89A1BB25B5D86C00FE5238 /* Colors_LBTAApp.swift in Sources */,
+				AC89A1CE25B5FDA600FE5238 /* CShape.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
